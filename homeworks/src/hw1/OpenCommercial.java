@@ -34,6 +34,27 @@ class OpenCommercial {
     InputStream ins = U.openStream();
     InputStreamReader inr = new InputStreamReader(ins);
     BufferedReader comp = new BufferedReader(inr);
+
+// solution 1: if I have not learned loop yet.
+    String str0 = new String();
+    String str1 = new String();
+    String str2 = new String();
+    String str3 = new String();
+    String str4 = new String();
+    
+    str0 = comp.readLine();
+    str1 = comp.readLine();   
+    str2 = comp.readLine();
+    str3 = comp.readLine();
+    str4 = comp.readLine();
+    
+    System.out.println(str4);
+    System.out.println(str3);
+    System.out.println(str2);
+    System.out.println(str1);
+    System.out.println(str0);
+    
+/* solution 2 -- loop
     String[] str = new String[5];
     for(int i=0; i<5; i++) {
     	str[i] = comp.readLine();
@@ -41,5 +62,6 @@ class OpenCommercial {
     for(int i=4; i>=0; i--) {
     	System.out.println(str[i]);
     }
+*/
   }
 }
