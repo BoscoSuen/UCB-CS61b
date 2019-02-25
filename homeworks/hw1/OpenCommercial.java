@@ -26,8 +26,19 @@ class OpenCommercial {
     System.out.print("Please enter the name of a company (without spaces): ");
     System.out.flush();        /* Make sure the line is printed immediately. */
     inputLine = keyboard.readLine();
-
+    
     /* Replace this comment with your solution.  */
+    URL u = new URL("http://www."+inputLine+".com");
+    InputStream ins = u.openStream();
+    InputStreamReader inr = new InputStreamReader(ins);
+    BufferedReader comp = new BufferedReader(inr);
+    String[] str = new String[5];
+    for (int i=0; i<5; i++) {
+    	str[i] = comp.readLine();
+    }
+    for (int i= 4; i>=0; i--) {
+    	System.out.println(str[i]);
+    }
 
   }
 }
