@@ -14,7 +14,7 @@ public class Nuke2 {
 		System.out.println("type a string from your keyboard:");
 	    System.out.flush();        /* Make sure the line is printed immediately. */
 	    
-	    str = keyboard.readLine();   //when encounter error, add "throw Exception at the method declaration"
+	    str = keyboard.readLine();   //when encounter error, add "throw Exception" at the method declaration part
 	    
 	    StringBuffer strbuff = new StringBuffer(str);
 	    strbuff.delete(1,2);      //remove the second character
