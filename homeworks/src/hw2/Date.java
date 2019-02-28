@@ -75,7 +75,41 @@ class Date {
    *  Years prior to A.D. 1 are NOT valid.
    */
   public static boolean isValidDate(int month, int day, int year) {
-    return true;                        // replace this line with your solution
+    if(year < 1) {
+    	return false;
+    } else {
+    	switch(month) {
+    	case 2:
+    		if(isLeapYear(year) == true) {
+    			if(day>=1 && day<=29) {
+    				return true;
+    			} else {
+    				return false;
+    				} 
+    			} else {
+        			if(day>=1 && day<=28) {
+    					return true;
+    				} else {
+    					return false;
+    				}
+    			}
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+        	if(day>=1 && day<=30) {
+				return true;
+			} else {
+				return false;
+			}
+        default:
+        	if(day>=1 && day<=30) {
+				return true;
+			} else {
+				return false;
+			}
+    	}
+    }
   }
 
   /** Returns a string representation of this date in the form month/day/year.
