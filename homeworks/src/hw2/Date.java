@@ -33,6 +33,8 @@ class Date {
    *  between 1 and 4 digits.  If s does not match these requirements or is not
    *  a valid date, the program halts with an error message.
    */
+  
+/* first try, could pass the test, but could not check if the string is validT_T
   public Date(String s) {
 	  int first_find = 0;
 	  int second_find = 0;
@@ -45,10 +47,32 @@ class Date {
 	  y = s.substring(second_find+1);
 	  month = Integer.parseInt(m);
 	  day = Integer.parseInt(d);
-	  year = Integer.parseInt(y);
-	  
+	  year = Integer.parseInt(y);  
   }
-
+*/
+  	// another way, split the string: a very good idea...
+  public Date(String s) {
+    String[] mdy = s.split("/");
+    if(mdy.length != 3 || !mdy[0].matches("[0-9]+") || !mdy[1].matches("[0-9]+") || !mdy[2].matches("[0-9]+")) {
+    	System.out.println("the date string input is not valid!");
+    	System.exit(0);
+    } 
+    
+    month = Integer.parseInt(mdy[0]);
+    day = Integer.parseInt(mdy[1]);
+    year = Integer.parseInt(mdy[2]);			//check if it is a valid date, use the isValidDate method.
+    
+    if(isValidDate(month,day,year) == false) {
+    	System.out.println("the date string input is not valid!");
+    	System.exit(0);
+    }
+    
+    this.month = month;
+    this.day = day;
+    this.year = year;
+    	
+  }
+  
   /** Checks whether the given year is a leap year.
    *  @return true if and only if the input year is a leap year.
    */
@@ -229,8 +253,9 @@ class Date {
     /* I recommend you write code to test the isLeapYear function! */
     System.out.println("\nTesting isLeapYear function.");
     Date d6 = new Date("1/1/2100");
+    Date d7 = new Date("1/1/2000");
     System.out.println("The year of " + d6 + " is a leap year:" + isLeapYear(d6.year));
-    
+    System.out.println("The year of " + d7 + " is a leap year:" + isLeapYear(d7.year));
     
     System.out.println("\nTesting before and after.");
     System.out.println(d2 + " after " + d1 + " should be true: " + 
@@ -265,6 +290,6 @@ class Date {
     System.out.println(d3 + " - " + d4  + " should be -422: " + 
                        d3.difference(d4));
     System.out.println(d5 + " - " + d4  + " should be 48762: " + 
-                       d5.difference(d4));
+                       d5.difference(d4));    
   }
 }
