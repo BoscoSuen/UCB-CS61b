@@ -6,9 +6,9 @@ import java.io.*;
 class Date {
 
   /* Put your private data fields here. */
-	private int month;
-	private int day;
-	private int year;
+	private static int month;
+	private static int day;
+	private static int year;
   /** Constructs a date with the given month, day and year.   If the date is
    *  not valid, the entire program will halt with an error message.
    *  @param month is a month, numbered in the range 1...12.
@@ -16,7 +16,15 @@ class Date {
    *  @param year is the year in question, with no digits omitted.
    */
   public Date(int month, int day, int year) {
-	  
+	  if (isValidDate(month,day,year) == true) {
+		  Date.month = month;
+		  Date.day = day;
+		  Date.year = year;
+		  return;
+	  } else {
+		  System.out.println("The date is not valid!");
+		  System.exit(0);
+	  }
   }
 
   /** Constructs a Date object corresponding to the given string.
@@ -26,7 +34,7 @@ class Date {
    *  a valid date, the program halts with an error message.
    */
   public Date(String s) {
-
+	  
   }
 
   /** Checks whether the given year is a leap year.
@@ -96,7 +104,10 @@ class Date {
    *  @return a String representation of this date.
    */
   public String toString() {
-    return "stuff";                     // replace this line with your solution
+    String m = String.valueOf(Date.month);     //convert integer into String
+    String d = String.valueOf(Date.day);
+    String y = String.valueOf(Date.year);
+    return (m + "/" + d +"/" + y );
   }
 
   /** Determines whether this Date is before the Date d.
