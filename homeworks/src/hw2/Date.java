@@ -6,9 +6,9 @@ import java.io.*;
 class Date {
 
   /* Put your private data fields here. */
-	private static int month;
-	private static int day;
-	private static int year;
+	private int month;
+	private int day;
+	private int year;
   /** Constructs a date with the given month, day and year.   If the date is
    *  not valid, the entire program will halt with an error message.
    *  @param month is a month, numbered in the range 1...12.
@@ -17,9 +17,9 @@ class Date {
    */
   public Date(int month, int day, int year) {
 	  if (isValidDate(month,day,year) == true) {
-		  Date.month = month;
-		  Date.day = day;
-		  Date.year = year;
+		  this.month = month;
+		  this.day = day;
+		  this.year = year;
 		  return;
 	  } else {
 		  System.out.println("The date is not valid!");
@@ -34,6 +34,18 @@ class Date {
    *  a valid date, the program halts with an error message.
    */
   public Date(String s) {
+	  int first_find = 0;
+	  int second_find = 0;
+	  String m,d,y;
+	  first_find = s.indexOf("/");				//index of the first "/"
+	  second_find = s.indexOf("/",3);			//search from the second character
+	  
+	  m = s.substring(0,first_find);
+	  d = s.substring(first_find+1,second_find);
+	  y = s.substring(second_find+1);
+	  month = Integer.parseInt(m);
+	  day = Integer.parseInt(d);
+	  year = Integer.parseInt(y);
 	  
   }
 
@@ -104,9 +116,9 @@ class Date {
    *  @return a String representation of this date.
    */
   public String toString() {
-    String m = String.valueOf(Date.month);     //convert integer into String
-    String d = String.valueOf(Date.day);
-    String y = String.valueOf(Date.year);
+    String m = String.valueOf(this.month);     //convert integer into String
+    String d = String.valueOf(this.day);
+    String y = String.valueOf(this.year);
     return (m + "/" + d +"/" + y );
   }
 
@@ -114,14 +126,42 @@ class Date {
    *  @return true if and only if this Date is before d. 
    */
   public boolean isBefore(Date d) {
-    return true;                        // replace this line with your solution
+    if(this.year < d.year) {
+    	return true;
+    } else {
+    	if(this.year > d.year) {
+    		return false;
+    	} else {									//equal year
+    		if(this.month < d.month) {
+    			return true;
+    		} else {
+    			if(this.month > d.month) {
+    				return false;
+    			} else {							//equal month
+    				if(this.day < d.day) {
+    					return true;
+    				} else {
+    					return false;
+    				}
+    			}
+    		}
+    	}
+    }
   }
 
   /** Determines whether this Date is after the Date d.
    *  @return true if and only if this Date is after d. 
    */
   public boolean isAfter(Date d) {
-    return true;                        // replace this line with your solution
+    if (this.month == d.month && this.day == d.day && this.year == d.year) {
+    	return false;
+    } else {
+    	if(isBefore(d) == true) {
+    		return false;
+    	} else {
+    		return true;
+    	}
+    }
   }
 
   /** Returns the number of this Date in the year.
@@ -130,7 +170,12 @@ class Date {
    *  year.)
    */
   public int dayInYear() {
-    return 0;                           // replace this line with your solution
+	  int days = 0;
+	  for(int i=1; i<this.month; i++) {
+		  days = days + daysInMonth(i,this.year); 
+	  }
+	  days = days + this.day;
+	  return days;
   }
 
   /** Determines the difference in days between d and this Date.  For example,
@@ -139,9 +184,27 @@ class Date {
    *  @return the difference in days between d and this date.
    */
   public int difference(Date d) {
-    return 0;                           // replace this line with your solution
-  }
+	    int sumofdays = 0;
+	    int numofleapyears = 0;
+		int d_sumofdays = 0;
+		int d_numofleapyears =0;
+	    for(int j=1; j<this.year; j++) {
+	    	if(isLeapYear(j) == true) {
+	    		numofleapyears++;
+	    	}
+	    }
+		for(int j=1; j<d.year; j++) {
+	    	if(isLeapYear(j) == true) {
+	    		d_numofleapyears++;
+	    	}
+	    }
 
+	    sumofdays = numofleapyears + (this.year - 1)*365 + this.dayInYear();					//calculate the sum of all days before the date.
+	    d_sumofdays = d_numofleapyears + (d.year - 1)*365 + d.dayInYear();
+
+		return (sumofdays - d_sumofdays);
+		
+	  }
   public static void main(String[] argv) {
     System.out.println("\nTesting constructors.");
     Date d1 = new Date(1, 1, 1);
@@ -164,7 +227,11 @@ class Date {
     Date d5 = new Date("8/31/2110");
 
     /* I recommend you write code to test the isLeapYear function! */
-
+    System.out.println("\nTesting isLeapYear function.");
+    Date d6 = new Date("1/1/2100");
+    System.out.println("The year of " + d6 + " is a leap year:" + isLeapYear(d6.year));
+    
+    
     System.out.println("\nTesting before and after.");
     System.out.println(d2 + " after " + d1 + " should be true: " + 
                        d2.isAfter(d1));
