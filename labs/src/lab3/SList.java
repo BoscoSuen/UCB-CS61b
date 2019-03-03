@@ -69,7 +69,6 @@ public class SList {
 		tail = tail.next;
 		size++;
 		}
-
   }
 		
  
