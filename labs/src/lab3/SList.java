@@ -22,6 +22,7 @@ public class SList {
   public SList() {
     size = 0;
     head = null;
+    tail = null;
   }
 
   /**
@@ -65,7 +66,7 @@ public class SList {
     if (tail == null) {
     insertFront(obj);
     } else {
-    	tail.next = new SListNode(obj, null);
+    	tail.next = new SListNode(obj);
 		tail = tail.next;
 		size++;
 		}
