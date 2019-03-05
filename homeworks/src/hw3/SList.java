@@ -113,14 +113,16 @@ public class SList {
 
   public void squish() {
     // Fill in your solution here.  (Ours is eleven lines long.)
-	  SListNode currentnode = head;					
+	  SListNode currentnode = head;	
+	  if (currentnode != null) {
 	  while (currentnode.next != null) {
 		  if (currentnode.item.equals(currentnode.next.item)) {
 			  currentnode.next = currentnode.next.next;
 		  } else {
 			  currentnode = currentnode.next;
 		  }
-	  }			  
+	  }	
+	  }									// solution code is ten lines long.
   }
 
   
@@ -137,8 +139,17 @@ public class SList {
 
   public void twin() {
     // Fill in your solution here.  (Ours is seven lines long.)
+	  SListNode currentNode = head, target = head;
+	  while (currentNode != null) {
+		  SListNode newNode = new SListNode(currentNode.item, null);
+		  target = currentNode.next;					//copy the next reference.
+		  currentNode.next = newNode;
+		  newNode.next = target;
+		  currentNode = target;
+		  size++;
+	  }													
   }
-
+  
   /**
    *  toString() converts the list to a String.
    *  @return a String representation of the list.
