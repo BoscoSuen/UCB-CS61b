@@ -1,0 +1,6 @@
+/*Grader.java*/
+/*
+	Test a hostile application to see if it could corrupt the DList, which is not located in the list package.
+*/
+
+/*Well... It would be shown in the Encapsulated List lecture*/
