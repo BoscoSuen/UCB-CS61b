@@ -1,6 +1,6 @@
 /* Keyable.java */
 
-package sortedlist;
+package lab6.SortedList;
 
 public interface Keyable {
     public int getKey();

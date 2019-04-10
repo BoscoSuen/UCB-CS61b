@@ -1,6 +1,6 @@
 /*LockDList.java*/
 /*hints: override newNode() and remove*/
-package list;
+package hw4.list;
 public class LockDList extends DList {
 
 	protected DListNode newNode(Object item, DListNode prev, DListNode next) {

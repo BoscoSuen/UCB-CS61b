@@ -1,6 +1,6 @@
 /*  VirtualTeller.java */
-
-import sortedlist.*;
+package lab6;
+import lab6.SortedList.*;
 
 /**
  *  An implementation of a virtual automated teller machine.
@@ -36,12 +36,17 @@ public class VirtualTeller {
    *  @param acct is an account number.
    *  @param amount an amount of money.
    */
-  public void withdraw(int acct, int amount) {
+  public void withdraw(int acct, int amount) throws BadAccountException,BadTransactionException{
     AccountData account = findAccount(acct);
 
     if (account == null) {   // Didn't find the account.
+      throw new BadAccountException(acct);
+    	/*
       System.out.println("Error:  Couldn't find account number `" +
                          acct + "'" );
+                         */
+    } else if (amount <= 0) {
+    	throw new BadTransactionException(amount);
     } else {
       account.withdraw(amount);
     }
@@ -54,12 +59,17 @@ public class VirtualTeller {
    *  @param acct is an account number.
    *  @param amount an amount of money.
    */
-  public void deposit(int acct, int amount) {
+  public void deposit(int acct, int amount) throws BadAccountException,BadTransactionException{
     AccountData account = findAccount(acct);
 
     if (account == null) { 
+      throw new BadAccountException(acct);
+    	/*
       System.out.println("Error:  Couldn't find account number `" +
                          acct + "'");
+                         */
+    } else if (amount <= 0) {
+    	throw new BadTransactionException(amount);
     } else {
       account.deposit(amount);
     }
@@ -71,13 +81,16 @@ public class VirtualTeller {
    *  @param acct an account number.
    *  @return the balance, or -1 if the account number is invalid.
    */
-  public int balanceInquiry(int acct) {
+  public int balanceInquiry(int acct) throws BadAccountException {
     AccountData account = findAccount(acct);
 
     if (account == null) {
+    	throw new BadAccountException(acct);
+    	/*
       System.out.println("Error:  Couldn't find account number `" +
                          acct + "'" );
       return -1;
+      */
     } else {
       return account.getBalance();
     }
@@ -89,7 +102,7 @@ public class VirtualTeller {
    *  @param acct is an account number.
    *  @return the AccountData object associated with the account number.
    */
-  private AccountData findAccount(int acct) {
+  private AccountData findAccount(int acct){
     AccountData account = (AccountData) accounts.find(acct);
     return account;
   }

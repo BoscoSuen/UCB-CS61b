@@ -1,5 +1,5 @@
 /* BadAccountException.java */
-
+package lab6;
 /**
  *  Implements an exception that should be thrown for nonexistent accounts.
  **/

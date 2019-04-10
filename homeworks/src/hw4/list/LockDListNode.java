@@ -1,6 +1,6 @@
 /*LockDListNode.java*/
 /* Carry information about whether it has been locked. LockDListNodes are not locked when they are first created. */
-package list;
+package hw4.list;
 public class LockDListNode extends DListNode {
 
 	protected boolean locked;

@@ -1,5 +1,5 @@
 /* DList2.java */
-
+package lab4;
 /**
  *  A DList2 is a mutable doubly-linked list.  Its implementation is
  *  circularly-linked and employs a sentinel (dummy) node at the head

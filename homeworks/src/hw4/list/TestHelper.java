@@ -1,5 +1,5 @@
 /* TestHelper.java */
-package list;
+package hw4.list;
 /**
  *  The purpose of this class is to provide a shorthand for writing and testing
  *  invariants in any program.

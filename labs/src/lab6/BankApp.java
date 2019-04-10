@@ -1,7 +1,7 @@
 /* BankApp.java */
-
+package lab6;
 import java.io.*;
-import sortedlist.*;
+import lab6.SortedList.*;
 
 /**
  *  A bank application.  Allows a user to create and manipulate 
@@ -16,27 +16,35 @@ public class BankApp {
     greeting();
     usage();
     BankApp bankApp = new BankApp();
-
-    String command = bankApp.readLine("--> ");
-    while (!command.equals("quit")) {
-      try {
-	if (command.equals("open")) {
-	  bankApp.open();
-	} else if (command.equals("deposit")) {
-	  bankApp.doDeposit();
-	} else if (command.equals("withdraw")) {
-	  bankApp.doWithdraw();
-	} else if (command.equals("inquire")) {
-	  bankApp.doInquire();
-	} else {
-	  System.err.println("Invalid command: " + command);
-	  usage();
-	}
-      } catch(IOException e) {
-	System.err.println(e);
-      }
+    try {
+      String command = bankApp.readLine("--> ");
+      while (!command.equals("quit")) {
+        try {
+	  if (command.equals("open")) {
+	    bankApp.open();
+	  } else if (command.equals("deposit")) {
+	    bankApp.doDeposit();
+	  } else if (command.equals("withdraw")) {
+	    bankApp.doWithdraw();
+	  } else if (command.equals("inquire")) {
+	    bankApp.doInquire();
+	  } else {
+	    System.err.println("Invalid command: " + command);
+	    usage();
+  	  }
+        } catch(IOException e) {
+	       System.err.println(e);
+        } catch (BadAccountException e2) {
+            System.out.println(e2);
+        }
+        catch (BadTransactionException e3) {
+            System.out.println(e3);
+        }
       command = bankApp.readLine("--> ");
-    }
+      }
+    } catch (IOException e1) {
+	  System.out.println("IOException: " + e1);
+    } 
   }
 
   public BankApp() {
@@ -61,7 +69,7 @@ public class BankApp {
   *  deposit transaction on that account. 
   *  @exception IOException if there are problems reading user input.
   */
-  private void doDeposit() throws IOException {
+  private void doDeposit() throws IOException,BadAccountException,BadTransactionException{
     // Get account number.
     int acctNumber = readInt("Enter account number: ");
     int amount = readInt("Enter amount to deposit: ");
@@ -76,7 +84,7 @@ public class BankApp {
    *  to perform a withdrawal transaction from that account.
    *  @exception IOException if there are problems reading user input.
    */
-  private void doWithdraw() throws IOException {
+  private void doWithdraw() throws IOException,BadAccountException,BadTransactionException {
     // Get account number.
     int acctNumber = readInt("Enter account number: ");
     int amount = readInt("Enter amount to withdraw: ");
@@ -91,7 +99,7 @@ public class BankApp {
    *  discover and print that account's balance.
    *  @exception IOException if there are problems reading user input.
    */
-  private void doInquire() throws IOException {
+  private void doInquire() throws IOException,BadAccountException {
     int acctNumber = readInt("Enter account number: ");
 
     System.out.println("Balance for #" + acctNumber + " is " +

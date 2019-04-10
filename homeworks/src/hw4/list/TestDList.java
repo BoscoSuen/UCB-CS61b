@@ -1,5 +1,5 @@
 /*TestDList.java*/
-package list;
+package hw4.list;
 /*
 	The methods we need to test: isEmpty(), length(), insertFront and insertBack, front and back, next and prev, insertAfter and insertBefore, remove.
 */

@@ -1,6 +1,6 @@
 /* ListEnum.java */
 
-package sortedlist;
+package lab6.SortedList;
 
 import java.util.Enumeration;
 

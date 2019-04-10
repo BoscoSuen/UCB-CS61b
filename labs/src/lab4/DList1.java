@@ -1,5 +1,5 @@
 /* DList1.java */
-
+package lab4;
 /**
  *  A DList1 is a mutable doubly-linked list.  (No sentinel, not
  *  circularly linked.)

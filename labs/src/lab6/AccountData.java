@@ -1,6 +1,6 @@
 /* AccountData.java */
-
-import sortedlist.*;
+package lab6;
+import lab6.SortedList.*;
 
 /**
  *  Implements a customer's account profile for the virtual teller machine.
