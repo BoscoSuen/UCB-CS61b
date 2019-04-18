@@ -47,7 +47,6 @@ public class Homework6Test {
 
   public static void main(String[] args) {
     int numBoards;
-
     if (args.length == 0) {
       numBoards = 100;
     } else {

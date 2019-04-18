@@ -24,6 +24,7 @@ public class HashTableChained implements Dictionary {
 	public int numberOfBuckets;									// N
 	protected List[] buckets;
 	public int size;														// number of entries.
+	public int collisions;											// number of collisions.
 	
 	
 	
@@ -42,6 +43,7 @@ public class HashTableChained implements Dictionary {
   	for (int i = 0; i < numberOfBuckets; i++) {
   		buckets[i] = new SList();
   		size = 0;
+  		collisions = 0;
   	}
   }
   
@@ -89,7 +91,11 @@ public class HashTableChained implements Dictionary {
 
   int compFunction(int code) {
     // Replace the following line with your solution.
-    return ((7777 * code + 77777) % 16908799) & numberOfBuckets;			// a = 7777, b = 77777, p = 16908799, N = numberOfBuckets.
+    int comp = ((7777 * code + 77777) % 16908799) & numberOfBuckets;			// a = 7777, b = 77777, p = 16908799, N = numberOfBuckets.
+    if (comp < 0) {
+    	comp += numberOfBuckets;
+    }
+    return comp;
   }
 
   /** 
@@ -187,7 +193,27 @@ public class HashTableChained implements Dictionary {
 
   public Entry remove(Object key) {
     // Replace the following line with your solution.
-    return null;
+  	int keyCode = compFunction(key.hashCode());
+  	ListNode target = buckets[keyCode].front();
+  	if (buckets[keyCode].length() == 0) {
+  		return null;
+  	}
+  	ListNode node = buckets[keyCode].front();
+  	while (node.isValidNode() == true) {
+  		try {
+  			if (key.equals(((Entry)node.item()).key)) {
+  				target.setItem(node.item());
+  				node.remove();
+  				size--;
+  				return (Entry)target.item();
+  			} else {
+  				node = node.next();
+  			}
+  		} catch (InvalidNodeException e) {
+  				System.out.println("InvalidNodeException: " + e);
+  			}
+  	}
+  	return null;
   }
 
   /**
@@ -195,6 +221,19 @@ public class HashTableChained implements Dictionary {
    */
   public void makeEmpty() {
     // Your solution here.
+  	for (List l : buckets) {
+  		if (l.length() != 0) {
+  			while (l.length() > 0) {
+  				try {
+  	  			ListNode current = l.front();
+  	  			current.remove();
+  	  			size--;
+  				} catch (InvalidNodeException e) {
+    				System.out.println("InvalidNodeException: " + e);
+    			}
+  			}
+  		}
+  	}
   }
 
 }
