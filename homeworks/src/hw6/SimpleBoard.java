@@ -90,7 +90,7 @@ public class SimpleBoard {
     for (int i = 0; i < DIMENSION; i++) {
     	for (int j = 0; j < DIMENSION; j++) {
     		int index = DIMENSION * i + j;
-    		code += Math.pow(3, index);
+    		code += grid[i][j] * Math.pow(3, index);
     	}
     }
     return code;

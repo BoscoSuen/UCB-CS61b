@@ -26,8 +26,6 @@ public class HashTableChained implements Dictionary {
 	public int size;														// number of entries.
 	public int collisions;											// number of collisions.
 	
-	
-	
 
 
   /** 
@@ -91,11 +89,8 @@ public class HashTableChained implements Dictionary {
 
   int compFunction(int code) {
     // Replace the following line with your solution.
-    int comp = ((7777 * code + 77777) % 16908799) & numberOfBuckets;			// a = 7777, b = 77777, p = 16908799, N = numberOfBuckets.
-    if (comp < 0) {
-    	comp += numberOfBuckets;
-    }
-    return comp;
+    int comp = ((233 * code + 7777) % 16908799); 			
+    return comp % numberOfBuckets;
   }
 
   /** 
@@ -110,6 +105,9 @@ public class HashTableChained implements Dictionary {
     return size;
   }
 
+  public int collisions() {
+  	return collisions;
+  }
   /** 
    *  Tests if the dictionary is empty.
    *
@@ -137,10 +135,15 @@ public class HashTableChained implements Dictionary {
   public Entry insert(Object key, Object value) {
     // Replace the following line with your solution.
   	int keyCode = compFunction(key.hashCode());
+  	System.out.println("key.hashCode() is: " + key.hashCode());
+  	System.out.println("keyCode is:" + keyCode);
   	Entry newEntry = new Entry();
   	newEntry.key = key;
   	newEntry.value = value;
-  	buckets[keyCode].insertBack(key);
+  	if (buckets[keyCode].length() >= 1) {
+  		collisions++;
+  	}
+  	buckets[keyCode].insertBack(newEntry);
   	size ++;
     return newEntry;
   }
@@ -157,6 +160,7 @@ public class HashTableChained implements Dictionary {
    *          no entry contains the specified key.
    **/
 
+
   public Entry find(Object key) {
     // Replace the following line with your solution.
   	int keyCode = compFunction(key.hashCode());
@@ -164,10 +168,15 @@ public class HashTableChained implements Dictionary {
   		return null;
   	}
   	ListNode node = buckets[keyCode].front();
+  	
+  	
+  	System.out.println(key);
+  	
   	while (node.isValidNode() == true) { 
   		try {
-    		if (key.equals(((Entry)node.item()).key)) {
-    			return (Entry)node.item();
+  			Entry target = (Entry)node.item();
+    		if (key.equals(target.key)) {
+    			return target;
     		} else {
     			node = node.next();
     		}
@@ -177,6 +186,7 @@ public class HashTableChained implements Dictionary {
   	}
     return null;
   }
+
 
   /** 
    *  Remove an entry with the specified key.  If such an entry is found,
@@ -194,18 +204,20 @@ public class HashTableChained implements Dictionary {
   public Entry remove(Object key) {
     // Replace the following line with your solution.
   	int keyCode = compFunction(key.hashCode());
-  	ListNode target = buckets[keyCode].front();
   	if (buckets[keyCode].length() == 0) {
   		return null;
   	}
   	ListNode node = buckets[keyCode].front();
   	while (node.isValidNode() == true) {
   		try {
-  			if (key.equals(((Entry)node.item()).key)) {
-  				target.setItem(node.item());
+  			Entry target = (Entry)node.item();
+  			if (key.equals(target.key)) {
+  				if (buckets[keyCode].length() > 1) {
+  					collisions--;
+  				}
   				node.remove();
   				size--;
-  				return (Entry)target.item();
+  				return target;
   			} else {
   				node = node.next();
   			}
@@ -227,13 +239,69 @@ public class HashTableChained implements Dictionary {
   				try {
   	  			ListNode current = l.front();
   	  			current.remove();
-  	  			size--;
   				} catch (InvalidNodeException e) {
     				System.out.println("InvalidNodeException: " + e);
     			}
   			}
   		}
   	}
+  	size = 0;
+  	collisions = 0;
   }
+  
+  public String toString(){
+	  String p = new String();
+	  for(int i=0; i<buckets.length; i++){
+		  p = p+"["+buckets[i].length()+"]";
+		  if(((i + 1) % 10) == 0)
+			  p = p +"\n";
+	  }
+	  return p;
+  }
+  
+  public static void main(String[] argv) {
+	  System.out.println("testing");
+      // test prime number function
+      //test basic hash table function
+      System.out.println("======================basic insert,find,remove=====================");
+      HashTableChained table = new HashTableChained();
+      System.out.println("number of buckets is: " + table.numberOfBuckets);
+      System.out.println("table's size is: " + table.size());
+      System.out.println("table is Empty: " + table.isEmpty());
+      
+      System.out.println("=====================insert================================");
+      table.insert("1", "The first one");
+      table.insert("2", "The second one");
+      table.insert("3", "The third one");
+      table.insert("what", "nani?");
+      table.insert("the","Eh-heng");
+      table.insert("hell!","impolite");
+      System.out.println("table's size is: " + table.size());
+      System.out.println("table's collisions is: " + table.collisions());
+      System.out.println("table is Empty: " + table.isEmpty());
+      
+      System.out.println("====================find, remove===========================");
+      
+      Entry e1 = table.find("what");
+      if(e1 != null){
+    	   System.out.println("The item found is: [ " + e1.value + " ]");
+      }else{
+    	   System.out.println("The is no such item in the table to be found.");
+      }
+      
+      Entry e2 = table.remove("4396");
+      if(e2 != null){
+    	  System.out.println("The item deleted is: [ " + e2.value + " ]");
+      }else{
+    	  System.out.println("The is no such item in the table to be deleted.");
+      }       
 
+      // testing makeEmpty, isEmpty, size
+      System.out.println("===============test makeEmpty===================");
+      System.out.println("Is empty?: "+table.isEmpty());
+      System.out.println("Size before empty: "+table.size());
+      table.makeEmpty();
+      System.out.println("Size after empty: "+table.size());
+     
+  }
 }
