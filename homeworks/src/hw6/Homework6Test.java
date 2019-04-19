@@ -46,6 +46,7 @@ public class Homework6Test {
    **/
 
   public static void main(String[] args) {
+  	System.out.println("Test numberOfBoards = 100");
     int numBoards;
     if (args.length == 0) {
       numBoards = 100;
@@ -59,6 +60,36 @@ public class Homework6Test {
     // that counts the number of collisions--or better yet, also prints
     // a histograph of the number of entries in each bucket.  Call this method
     // from here.
+    System.out.println("n = " + numBoards + " N = " + table.size());
+    System.out.println("Actual number of collisions: " + table.collisions);
+    System.out.println("load factor: " + (double)numBoards/table.size());
+    System.out.printf("Expected number of collisions: %.2f%n", table.expectedCollisions(numBoards, table.size()));
+    String[] output = table.String();
+    for (String s : output) {
+      if (s != null) {
+        System.out.println(s);
+      }
+    }
+    
+    System.out.println("Test numberOfBoards = 200");
+    int numBoards2 = 200;
+    HashTableChained table2 = new HashTableChained(numBoards2);
+    initTable(table2, numBoards2);
+
+    // To test your hash function, add a method to your HashTableChained class
+    // that counts the number of collisions--or better yet, also prints
+    // a histograph of the number of entries in each bucket.  Call this method
+    // from here.
+    System.out.println("n = " + numBoards2 + " N = " + table2.size());
+    System.out.println("Actual number of collisions: " + table2.collisions);
+    System.out.println("load factor: " + (double)numBoards2/table2.size());
+    System.out.printf("Expected number of collisions: %.2f%n", table2.expectedCollisions(numBoards2, table2.size()));
+    String[] output2 = table2.String();
+    for (String s : output2) {
+      if (s != null) {
+        System.out.println(s);
+      }
+    }
   }
 
 }

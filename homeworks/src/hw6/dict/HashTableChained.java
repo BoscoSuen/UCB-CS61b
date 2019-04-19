@@ -23,7 +23,7 @@ public class HashTableChained implements Dictionary {
 	public static final int DEFAULT = 101;
 	public int numberOfBuckets;									// N
 	protected List[] buckets;
-	public int size;														// number of entries.
+	public int entries;														// number of entries.
 	public int collisions;											// number of collisions.
 	
 
@@ -40,7 +40,7 @@ public class HashTableChained implements Dictionary {
   	buckets = new List[numberOfBuckets];
   	for (int i = 0; i < numberOfBuckets; i++) {
   		buckets[i] = new SList();
-  		size = 0;
+  		entries = 0;
   		collisions = 0;
   	}
   }
@@ -89,7 +89,10 @@ public class HashTableChained implements Dictionary {
 
   int compFunction(int code) {
     // Replace the following line with your solution.
-    int comp = ((233 * code + 7777) % 16908799); 			
+    int comp = ((233 * code + 7777) % 16908799);
+    if (comp < 0) {
+    	comp += 16908799;
+    }
     return comp % numberOfBuckets;
   }
 
@@ -102,11 +105,15 @@ public class HashTableChained implements Dictionary {
 
   public int size() {
     // Replace the following line with your solution.
-    return size;
+    return numberOfBuckets;
   }
 
   public int collisions() {
   	return collisions;
+  }
+  
+  public double expectedCollisions(int n, int N) {
+  	return (n - N + (double)(N * (double)Math.pow((1 - (double)1/N),n)));
   }
   /** 
    *  Tests if the dictionary is empty.
@@ -116,7 +123,7 @@ public class HashTableChained implements Dictionary {
 
   public boolean isEmpty() {
     // Replace the following line with your solution.
-    return size == 0;
+    return entries == 0;
   }
 
   /**
@@ -135,8 +142,6 @@ public class HashTableChained implements Dictionary {
   public Entry insert(Object key, Object value) {
     // Replace the following line with your solution.
   	int keyCode = compFunction(key.hashCode());
-  	System.out.println("key.hashCode() is: " + key.hashCode());
-  	System.out.println("keyCode is:" + keyCode);
   	Entry newEntry = new Entry();
   	newEntry.key = key;
   	newEntry.value = value;
@@ -144,7 +149,7 @@ public class HashTableChained implements Dictionary {
   		collisions++;
   	}
   	buckets[keyCode].insertBack(newEntry);
-  	size ++;
+  	entries ++;
     return newEntry;
   }
 
@@ -168,10 +173,6 @@ public class HashTableChained implements Dictionary {
   		return null;
   	}
   	ListNode node = buckets[keyCode].front();
-  	
-  	
-  	System.out.println(key);
-  	
   	while (node.isValidNode() == true) { 
   		try {
   			Entry target = (Entry)node.item();
@@ -216,7 +217,7 @@ public class HashTableChained implements Dictionary {
   					collisions--;
   				}
   				node.remove();
-  				size--;
+  				entries--;
   				return target;
   			} else {
   				node = node.next();
@@ -245,27 +246,31 @@ public class HashTableChained implements Dictionary {
   			}
   		}
   	}
-  	size = 0;
+  	entries = 0;
   	collisions = 0;
   }
   
-  public String toString(){
-	  String p = new String();
-	  for(int i=0; i<buckets.length; i++){
-		  p = p+"["+buckets[i].length()+"]";
-		  if(((i + 1) % 10) == 0)
-			  p = p +"\n";
-	  }
-	  return p;
+  public String[] String() {
+    String[] res = new String[numberOfBuckets / 10 + 1];
+    String s = "";
+    int index = 0;
+    for (int i = 0; i < numberOfBuckets; ++i) {
+      if (i % 20 == 0) {
+        res[index] = s;
+        index++;
+        s = "";
+      }
+      s += "[" + Integer.toString(buckets[i].length())+ "]";
+    }
+    return res;
   }
   
   public static void main(String[] argv) {
-	  System.out.println("testing");
+	  System.out.println("Testing the HashTableChained:");
       // test prime number function
       //test basic hash table function
       System.out.println("======================basic insert,find,remove=====================");
       HashTableChained table = new HashTableChained();
-      System.out.println("number of buckets is: " + table.numberOfBuckets);
       System.out.println("table's size is: " + table.size());
       System.out.println("table is Empty: " + table.isEmpty());
       
@@ -278,6 +283,7 @@ public class HashTableChained implements Dictionary {
       table.insert("hell!","impolite");
       System.out.println("table's size is: " + table.size());
       System.out.println("table's collisions is: " + table.collisions());
+      //System.out.printf("table's expected collisions is: %.2f%n", table.expectedCollisions(table.entries,table.size()));
       System.out.println("table is Empty: " + table.isEmpty());
       
       System.out.println("====================find, remove===========================");
@@ -302,6 +308,42 @@ public class HashTableChained implements Dictionary {
       System.out.println("Size before empty: "+table.size());
       table.makeEmpty();
       System.out.println("Size after empty: "+table.size());
-     
+      System.out.println("check if the items can be found:");
+      Entry E1 = table.find("1");
+      if(E1 != null){
+    	   System.out.println("The item found is: [ " + E1.value + " ]");
+      }else{
+    	   System.out.println("The is no such item in the table to be found.");
+      }
+      Entry E2 = table.find("2");
+      if(E2 != null){
+    	   System.out.println("The item found is: [ " + E2.value + " ]");
+      }else{
+    	   System.out.println("The is no such item in the table to be found.");
+      }
+      Entry E3 = table.find("3");
+      if(E3 != null){
+    	   System.out.println("The item found is: [ " + E3.value + " ]");
+      }else{
+    	   System.out.println("The is no such item in the table to be found.");
+      }
+      Entry E4 = table.find("what");
+      if(E4 != null){
+    	   System.out.println("The item found is: [ " + E4.value + " ]");
+      }else{
+    	   System.out.println("The is no such item in the table to be found.");
+      }
+      Entry E5 = table.find("the");
+      if(E5 != null){
+    	   System.out.println("The item found is: [ " + E5.value + " ]");
+      }else{
+    	   System.out.println("The is no such item in the table to be found.");
+      }
+      Entry E6 = table.find("hell");
+      if(E6 != null){
+    	   System.out.println("The item found is: [ " + E6.value + " ]");
+      }else{
+    	   System.out.println("The is no such item in the table to be found.");
+      }
   }
 }
