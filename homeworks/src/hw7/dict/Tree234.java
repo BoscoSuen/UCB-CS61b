@@ -106,6 +106,7 @@ public class Tree234 extends IntDictionary {
   		Tree234Node node = root;
   		if (node == null) {
   			Tree234Node newroot = new Tree234Node(null, key);
+  			root = newroot;
   		} else {
 	  		if (node.keys == 3) {				// set a new root.
 	  			Tree234Node newroot = new Tree234Node(null, node.key2);
@@ -114,13 +115,30 @@ public class Tree234 extends IntDictionary {
 	  			root = newroot;
 	  			newroot.child1 = newchild1;
 	  			newroot.child2 = newchild2;
+	  			if (node.child1 != null) {
+	  				newchild1.child1 = node.child1;
+	  				node.child1.parent = newchild1;
+	  			}
+	  			if (node.child2 != null) {
+	  				newchild1.child2 = node.child2;
+	  				node.child2.parent = newchild1;
+	  			}
+	  			if (node.child3 != null) {
+	  				newchild2.child1 = node.child3;
+	  				node.child3.parent = newchild2;
+	  			}
+	  			if (node.child1 != null) {
+	  				newchild2.child2 = node.child4;
+	  				node.child4.parent = newchild2;
+	  			}
 	  			if (key < node.key1) {
 	  				node = newchild1;
 	  			} else {
 	  				node = newchild2;
 	  			}
-	  		} else {								// from here, the node has the parent node.
-	  			while (node.child1 != null && node.child2 != null && node.child3 != null && node.child4 != null) {
+	  		}
+	  		{								// from here, the node has the parent node.
+	  			while (node.child1 != null || node.child2 != null || node.child3 != null || node.child4 != null) {
 	  				if (node.keys == 3) {			// eject the middle key.
 	  					int eject = node.key2;
 	  					int index = indexChild(node);
@@ -143,7 +161,7 @@ public class Tree234 extends IntDictionary {
 	  					node.child4.parent = newnode;
 	  					newnode.child1 = node.child3;
 	  					newnode.child2 = node.child4;
-	  					for (int i = 3; i > index; i++) {
+	  					for (int i = 3; i > index; i--) {
 	  						node.parent.setChild(i+1, node.parent.getChild(i));
 	  					}
 	  					node.parent.setChild(index+1, newnode);			// here: add a new child and should change the node in the following:
@@ -170,66 +188,69 @@ public class Tree234 extends IntDictionary {
 	  				}
 	  			}		// the end of the while
 	  			// node comes to the leaf:
-	  			if (node.keys == 3) {			// eject the middle key.
-  					int ejectleaf = node.key2;
-  					int indexleaf = indexChild(node);
-  					node.parent.keys++;						// the max number of keys of parent = 2.
-  					if (ejectleaf < node.parent.key1) {
-  						node.parent.key3 = node.parent.key2;
-  						node.parent.key2 = node.parent.key1;
-  						node.parent.key1 = ejectleaf;
-  					} else if (node.parent.keys >= 2 && ejectleaf < node.parent.key2) {
-  						node.parent.key3 = node.parent.key2;
-  						node.parent.key2 = ejectleaf;
-  					} else if (node.parent.keys >=2 &&  ejectleaf < node.parent.key2) {													// eject > node.parent.key2
-  						node.parent.key3 = ejectleaf;
-  					} else {				// keys = 1:
-  						node.parent.key2 = ejectleaf;
-  					}
-  					// break the node:
-  					Tree234Node newnode = new Tree234Node(node.parent, node.key3);
-  					for (int i = 3; i > indexleaf; i++) {
-  						node.parent.setChild(i+1, node.parent.getChild(i));
-  					}
-  					node.parent.setChild(indexleaf+1, newnode);			// here: add a new child and should change the node in the following:
-  					node.keys = 1;
-  					if (key < node.key1) {
-  						node.keys++;
-  						node.key2 = node.key1;
-  						node.key1 = key;
-  					} else if (key > node.key1 && key < newnode.key1) {
-  						node.keys++;
-  						node.key2 = key;
-  					} else {
-  						newnode.keys++;
-  						newnode.key2 = key;
-  					}
-  				}	else {											// node.keys <3
-  					if (node.keys == 1) {
-  						if (key < node.key1) {
-  							node.keys++;
-  							node.key2 = node.key1;
-  							node.key1 = key;
-  						} else {
-  							node.keys++;
-  							node.key2 = key;
-  						}
-  					} else {
-  						if (key < node.key1) {
-  							node.keys++;
-  							node.key3 = node.key2;
-  							node.key2 = node.key1;
-  							node.key1 = key;
-  						} else if (key < node.key2) {
-  							node.keys++;
-  							node.key3 = node.key2;
-  							node.key2 = key;
-  						} else {
-  							node.keys++;
-  							node.key3 = key;
-  						}
-  					}
-  				}
+	  			if (/*leaf*/node.keys == 3) {			// eject the middle key.
+						int ejectleaf = node.key2;
+						int indexleaf = indexChild(node);
+						if (ejectleaf < node.parent.key1) {
+							node.parent.key3 = node.parent.key2;
+							node.parent.key2 = node.parent.key1;
+							node.parent.key1 = ejectleaf;
+						} else if (node.parent.keys >= 2 && ejectleaf < node.parent.key2) {
+							node.parent.key3 = node.parent.key2;
+							node.parent.key2 = ejectleaf;
+						} else if (node.parent.keys >=2 &&  ejectleaf > node.parent.key2) {													// eject > node.parent.key2
+							node.parent.key3 = ejectleaf;
+						} else {				// keys = 1:
+							node.parent.key2 = ejectleaf;
+						}
+						node.parent.keys++;						// the max number of keys of parent = 2.
+						// break the node:
+						Tree234Node newnode = new Tree234Node(node.parent, node.key3);
+						for (int i = 3; i > indexleaf; i--) {
+							node.parent.setChild(i+1, node.parent.getChild(i));
+						}
+						node.parent.setChild(indexleaf+1, newnode);			// here: add a new child and should change the node in the following:
+						node.keys = 1;
+						if (key < node.key1) {
+							node.keys++;
+							node.key2 = node.key1;
+							node.key1 = key;
+						} else if (key > node.key1 && key < newnode.key1) {
+//							node.keys++;
+//							node.key2 = key;
+							newnode.keys++;
+							newnode.key2 = newnode.key1;
+							newnode.key1 = key;
+						} else {
+							newnode.keys++;
+							newnode.key2 = key;
+						}
+					}	else {											// node.keys <3
+						if (node.keys == 1) {
+							if (key < node.key1) {
+								node.keys++;
+								node.key2 = node.key1;
+								node.key1 = key;
+							} else {
+								node.keys++;
+								node.key2 = key;
+							}
+						} else {
+							if (key < node.key1) {
+								node.keys++;
+								node.key3 = node.key2;
+								node.key2 = node.key1;
+								node.key1 = key;
+							} else if (key < node.key2) {
+								node.keys++;
+								node.key3 = node.key2;
+								node.key2 = key;
+							} else {
+								node.keys++;
+								node.key3 = key;
+							}
+						}
+					}
 	  		}
   		}
   		size++;
