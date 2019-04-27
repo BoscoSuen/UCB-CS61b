@@ -161,7 +161,85 @@ public class BinaryTree implements Dictionary {
    **/
   public Entry remove(Object key) {
     // Replace the following line with your solution.
-    return null;
+  	BinaryTreeNode target = findHelper((Comparable)key, root);
+    if (target == null) {
+    	return null;
+    } else {
+    	BinaryTreeNode current = target;
+    	BinaryTreeNode replace = target;
+    	if (current.leftChild == null && current.rightChild == null) {
+    		if (current != root) {
+	    		if (current == current.parent.leftChild) {
+	    			current.parent.leftChild = null;
+	    		} else {
+	    			current.parent.rightChild = null;
+	    		}
+    		}
+    		current.parent = null;
+    		size--;
+    		return current.entry;
+    	} else if (current.leftChild == null && current.rightChild != null) {
+    		if (current != root) {
+      		if (current == current.parent.leftChild) {
+      			current.parent.leftChild = current.rightChild;
+      		} else {
+      			current.parent.rightChild = current.rightChild;
+      		}
+    		} else {
+    			root = current.rightChild;
+    			current.rightChild = null;
+    		}
+    		current.parent = null;
+    		size--;
+    		return current.entry;
+    	} else if (current.leftChild != null && current.rightChild == null) {
+    		if (current != root) {
+      		if (current == current.parent.leftChild) {
+      			current.parent.leftChild = current.leftChild;
+      		} else {
+      			current.parent.rightChild = current.leftChild;
+      		}
+    		} else {
+    			root = current.leftChild;
+    			current.leftChild = null;
+    		}
+    		current.parent = null;
+    		size--;
+    		return current.entry;
+    	} else {
+      	// the target has two children:
+      	replace = current.rightChild;
+      	while (replace.leftChild != null) {
+      	replace = replace.leftChild;
+      	}
+      	//
+      	if (replace.rightChild != null) {
+      		if (replace == replace.parent.leftChild) {
+      			replace.parent.leftChild = replace.rightChild;
+      		} else {
+      			replace.parent.rightChild = replace.rightChild;
+      		}
+      	} 
+      	if (replace != current.rightChild) {
+	        current.rightChild.parent = replace;
+	      	replace.rightChild = current.rightChild;
+      	}
+      	current.leftChild.parent = replace;
+      	replace.leftChild = current.leftChild;
+      	if (current != root) {
+      		if (current == current.parent.leftChild) {
+      			current.parent.leftChild = replace;
+      		} else {
+      			current.parent.rightChild = replace;
+      		}
+      	} else {
+      		root = replace;
+      	}
+    		replace.parent = current.parent;
+    		size--;
+    		return current.entry;
+    	}
+    }
   }
 
   /**
