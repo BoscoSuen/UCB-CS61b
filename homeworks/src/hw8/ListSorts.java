@@ -88,6 +88,20 @@ public class ListSorts {
                                LinkedQueue qSmall, LinkedQueue qEquals, 
                                LinkedQueue qLarge) {
     // Your solution here.
+  	while (!qIn.isEmpty()) {
+  		try {
+  			Comparable item = (Comparable)qIn.front();
+  			if (item.compareTo(pivot) < 0) {
+  				qSmall.enqueue(qIn.dequeue());
+  			} else if (item.compareTo(pivot) == 0) {
+  				qEquals.enqueue(qIn.dequeue());
+  			} else {
+  				qLarge.enqueue(qIn.dequeue());
+  			}
+  		} catch (QueueEmptyException e) {
+  			System.out.println(e);
+  		}
+  	}
   }
 
   /**
@@ -104,7 +118,7 @@ public class ListSorts {
 	  		LinkedQueue merged = mergeSortedQueues(q1,q2);
 	  		QofQ.enqueue(merged);
 	  	}
-	  	q.append(QofQ);
+	  	q.append((LinkedQueue)QofQ.front());
   	} catch (QueueEmptyException e) {
   		System.out.println(e);
   	}
@@ -116,6 +130,21 @@ public class ListSorts {
    **/
   public static void quickSort(LinkedQueue q) {
     // Your solution here.
+  	int pivetIndex = (int)(q.size() * Math.random());				// Math.random(): 0.0~1.0
+  	LinkedQueue qSmall = new LinkedQueue();
+  	LinkedQueue qEquals = new LinkedQueue();
+  	LinkedQueue qLarge = new LinkedQueue();
+  	Comparable pivot = (Comparable)q.nth(pivetIndex);
+  	partition(q,pivot,qSmall,qEquals,qLarge);
+  	if (qSmall.size() > 1) {
+  		quickSort(qSmall);
+  	}
+  	if (qLarge.size() > 1) {
+  		quickSort(qLarge);
+  	}
+  	q.append(qSmall);
+  	q.append(qEquals);
+  	q.append(qLarge);
   }
 
   /**
@@ -137,16 +166,18 @@ public class ListSorts {
    *  cases.  Your test code will not be graded.
    **/
   public static void main(String [] args) {
-
+  	System.out.println("Now test the mergesort algorithm: ");
     LinkedQueue q = makeRandom(10);
-    System.out.println(q.toString());
+    System.out.println("The original queue is: \n" + q.toString());
     mergeSort(q);
-    System.out.println(q.toString());
-
+    System.out.println("After mergesort, the queue is: \n" + q.toString());
+    
+    System.out.println();
+    System.out.println("Now test the quicksort algorithm: ");
     q = makeRandom(10);
-    System.out.println(q.toString());
+    System.out.println("The original queue is: \n" + q.toString());
     quickSort(q);
-    System.out.println(q.toString());
+    System.out.println("After quicksort, the queue is: \n" + q.toString());
 
     /* Remove these comments for Part III.
     Timer stopWatch = new Timer();
