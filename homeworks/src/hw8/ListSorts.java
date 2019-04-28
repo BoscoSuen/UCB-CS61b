@@ -4,7 +4,7 @@ import hw8.list.*;
 
 public class ListSorts {
 
-  private final static int SORTSIZE = 1000;
+  private final static int SORTSIZE = 100;
 
   /**
    *  makeQueueOfQueues() makes a queue of queues, each containing one item
@@ -160,6 +160,24 @@ public class ListSorts {
     return q;
   }
 
+  public static void runtime(int SORTSIZE) {
+  	LinkedQueue q;
+    Timer stopWatch = new Timer();
+    q = makeRandom(SORTSIZE);
+    stopWatch.start();
+    mergeSort(q);
+    stopWatch.stop();
+    System.out.println("Mergesort time, " + SORTSIZE + " Integers:  " +
+                       stopWatch.elapsed() + " msec.");
+
+    stopWatch.reset();
+    q = makeRandom(SORTSIZE);
+    stopWatch.start();
+    quickSort(q);
+    stopWatch.stop();
+    System.out.println("Quicksort time, " + SORTSIZE + " Integers:  " +
+                       stopWatch.elapsed() + " msec.");
+  }
   /**
    *  main() performs some tests on mergesort and quicksort.  Feel free to add
    *  more tests of your own to make sure your algorithms works on boundary
@@ -179,7 +197,8 @@ public class ListSorts {
     quickSort(q);
     System.out.println("After quicksort, the queue is: \n" + q.toString());
 
-    /* Remove these comments for Part III.
+    System.out.println();
+
     Timer stopWatch = new Timer();
     q = makeRandom(SORTSIZE);
     stopWatch.start();
@@ -195,7 +214,11 @@ public class ListSorts {
     stopWatch.stop();
     System.out.println("Quicksort time, " + SORTSIZE + " Integers:  " +
                        stopWatch.elapsed() + " msec.");
-    */
+
+    runtime(1000);
+    runtime(10000);
+    runtime(100000);
+    runtime(1000000);
   }
 
 }
