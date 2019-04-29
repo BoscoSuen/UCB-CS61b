@@ -1,7 +1,7 @@
 /* Maze.java */
-
+package hw9;
 import java.util.*;
-import set.*;
+import hw9.set.*;
 
 /**
  *  The Maze class represents a maze in a rectangular grid.  There is exactly
@@ -77,9 +77,73 @@ public class Maze {
      * integer.  randInt() generates different numbers every time the program
      * is run, so that you can make lots of different mazes.
      **/
-
-
-
+    DisjointSets set = new DisjointSets(horiz * vert);
+    int numOfWalls = horiz * (vert - 1) + (horiz - 1) * vert;							// number of walls.
+    int[] walls = new int [numOfWalls];
+    
+    int index = 0;
+    if (vert > 1) {
+    	for (j = 0; j < vert - 1; j++) {
+    		for (i = 0; i < horiz; i++) { 
+    			walls[index] = j * horiz + i + 1;														// hwalls, they are positive numbers. + 1: get rid of 0.
+    			index++;
+    		}
+    	}
+    }
+    
+    if (horiz > 1) {
+    	for (j = 0; j < vert; j++) {
+    		for (i = 0; i < horiz - 1; i++) {
+    			walls[index] = -(j * horiz + i + 1);													// vwalls, they are negative numbers.
+    			index++;
+    		}
+    	}
+    }
+    /*   
+    System.out.println("The walls array is: ");
+    for (int a = 0; a<numOfWalls;a++) {
+    	System.out.print(walls[a] + " ");
+    }
+    System.out.println();
+    */
+    
+    int w = numOfWalls;
+    int temp;
+    while (w > 1) {																							// order walls in a random order.
+    	int pick = randInt(w);
+    	temp = walls[w-1];
+    	walls[w-1] = walls[pick];
+    	walls[pick] = temp;
+    	w--;
+    }
+    /*
+    System.out.println("The random walls array is: ");
+    for (int a = 0; a<numOfWalls;a++) {
+    	System.out.print(walls[a] + " ");
+    }
+    System.out.println();
+    */
+    int wallIndex;
+    for (int k = 0; k < numOfWalls; k++) {
+    	wallIndex = walls[k];
+    	if (wallIndex > 0) {										// it is a hwall.
+    		wallIndex--;													// get back the index from 0.
+    		int root1 = set.find(wallIndex);
+    		int root2 = set.find(wallIndex + horiz);
+    		if (root1 != root2) {
+    			set.union(root1,root2);
+    			hWalls[wallIndex % horiz][wallIndex / horiz] = false;
+    		}
+    	} else {																// it is a vwall.
+    		wallIndex++;
+    		int root1 = set.find(-wallIndex);
+    		int root2 = set.find(-(wallIndex - 1));
+    		if (root1 != root2) {
+    			set.union(root1,root2);
+    			vWalls[(-wallIndex) % horiz][(-wallIndex) / horiz] = false;
+    		}
+    	}
+    }
   }
 
   /**
@@ -269,7 +333,6 @@ public class Maze {
   public static void main(String[] args) {
     int x = 39;
     int y = 15;
-
     /**
      *  Read the input parameters.
      */
@@ -292,6 +355,7 @@ public class Maze {
       }
     }
 
+    System.out.println("Now let's build a maze: ");
     Maze maze = new Maze(x, y);
     System.out.print(maze);
     maze.diagnose();
